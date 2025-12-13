@@ -1,11 +1,31 @@
-export interface CompanyTheme {
-  logo: string | null
-  banner: string | null
-  primaryColor: string
-  secondaryColor: string
-  textColor: string
-  cultureVideoUrl: string
+export interface Company {
+  id: string;
+
+  // basic company info
+  name: string | null;
+  slug: string | null;
+  description: string | null;
+  website: string | null;
+
+  // theme configuration
+  primary_color: string | null;
+  secondary_color: string | null;
+  text_color: string | null;
+  logo_url: string | null;
+  banner_url: string | null;
+  culture_video_url: string | null;
+
+  // page builder
+  sections: PageSection[];
+
+  // status
+  is_published: boolean;
+
+  // timestamps
+  created_at: string;
+  updated_at: string;
 }
+
 
 export interface PageSection {
   id: string
@@ -26,13 +46,4 @@ export interface Job {
   description: string
   requirements: string[]
   postedDate: string
-}
-
-export interface CompanyData {
-  slug: string
-  name: string
-  theme: CompanyTheme
-  sections: PageSection[]
-  jobs: Job[]
-  isPublished: boolean
 }

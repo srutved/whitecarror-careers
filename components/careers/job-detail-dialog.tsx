@@ -4,16 +4,17 @@ import { MapPin, Building, Clock, Calendar, ArrowLeft } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import type { Job, CompanyTheme } from "@/lib/types"
+import type { Job } from "@/lib/types"
 
 interface JobDetailDialogProps {
   job: Job | null
-  theme: CompanyTheme
   isOpen: boolean
   onClose: () => void
+  primaryColor?: string
+  textColor?: string
 }
 
-export function JobDetailDialog({ job, theme, isOpen, onClose }: JobDetailDialogProps) {
+export function JobDetailDialog({ job, isOpen, onClose, primaryColor, textColor }: JobDetailDialogProps) {
   if (!job) return null
 
   const typeLabels: Record<Job["type"], string> = {
@@ -39,7 +40,7 @@ export function JobDetailDialog({ job, theme, isOpen, onClose }: JobDetailDialog
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to jobs
           </Button>
-          <DialogTitle className="text-2xl font-bold" style={{ color: theme.textColor }}>
+          <DialogTitle className="text-2xl font-bold" style={{ color: textColor }}>
             {job.title}
           </DialogTitle>
         </DialogHeader>
@@ -65,14 +66,14 @@ export function JobDetailDialog({ job, theme, isOpen, onClose }: JobDetailDialog
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-3" style={{ color: theme.textColor }}>
+            <h3 className="font-semibold text-lg mb-3" style={{ color: textColor }}>
               About This Role
             </h3>
             <p className="text-muted-foreground leading-relaxed">{job.description}</p>
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-3" style={{ color: theme.textColor }}>
+            <h3 className="font-semibold text-lg mb-3" style={{ color: textColor }}>
               Requirements
             </h3>
             <ul className="space-y-2">
@@ -80,7 +81,7 @@ export function JobDetailDialog({ job, theme, isOpen, onClose }: JobDetailDialog
                 <li key={idx} className="flex items-start gap-2 text-muted-foreground">
                   <span
                     className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0"
-                    style={{ backgroundColor: theme.primaryColor }}
+                    style={{ backgroundColor: primaryColor }}
                   />
                   {req}
                 </li>
@@ -88,7 +89,7 @@ export function JobDetailDialog({ job, theme, isOpen, onClose }: JobDetailDialog
             </ul>
           </div>
 
-          <Button className="w-full" style={{ backgroundColor: theme.primaryColor }}>
+          <Button className="w-full" style={{ backgroundColor: primaryColor }}>
             Apply for this position
           </Button>
         </div>

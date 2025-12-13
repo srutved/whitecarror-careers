@@ -5,15 +5,16 @@ import { Briefcase } from "lucide-react"
 import { JobCard } from "./job-card"
 import { JobFilters } from "./job-filters"
 import { JobDetailDialog } from "./job-detail-dialog"
-import type { Job, CompanyTheme } from "@/lib/types"
+import type { Job } from "@/lib/types"
 
 interface JobListProps {
   jobs: Job[]
-  theme: CompanyTheme
   disabled?: boolean
+  textColor?: string
+  primaryColor?: string
 }
 
-export function JobList({ jobs, theme, disabled }: JobListProps) {
+export function JobList({ jobs, disabled, primaryColor, textColor }: JobListProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [locationFilter, setLocationFilter] = useState("all")
   const [typeFilter, setTypeFilter] = useState("all")
@@ -36,12 +37,12 @@ export function JobList({ jobs, theme, disabled }: JobListProps) {
         <div className="flex justify-center items-center gap-3">
           <div
             className="w-10 h-10 rounded-lg flex items-center justify-center"
-            style={{ backgroundColor: theme.primaryColor }}
+            style={{ backgroundColor: primaryColor }}
           >
             <Briefcase className="h-5 w-5 text-primary-foreground" />
           </div>
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold" style={{ color: theme.textColor }}>
+            <h2 className="text-2xl md:text-3xl font-bold" style={{ color: textColor }}>
               Open Positions
             </h2>
           </div>
@@ -64,7 +65,7 @@ export function JobList({ jobs, theme, disabled }: JobListProps) {
           <div className="space-y-3">
             {
               filteredJobs.map((job) => (
-                <JobCard key={job.id} job={job} theme={theme} onClick={() => setSelectedJob(job)} disabled={disabled} />))
+                <JobCard key={job.id} job={job} textColor={textColor} onClick={() => setSelectedJob(job)} disabled={disabled} />))
             }
             <p className="text-muted-foreground text-md text-center">
               {jobs.length} {jobs.length === 1 ? "role" : "roles"} available
@@ -82,7 +83,8 @@ export function JobList({ jobs, theme, disabled }: JobListProps) {
 
       <JobDetailDialog
         job={selectedJob}
-        theme={theme}
+        primaryColor={primaryColor}
+        textColor={textColor}
         isOpen={!!selectedJob && !disabled}
         onClose={() => setSelectedJob(null)}
       />

@@ -71,7 +71,7 @@ export default function HomePage() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            <Link href="/techcorp/careers">
+            <Link href="/whitecarrot-demo/careers">
               <Button size="lg" variant="outline" className="text-base px-8 bg-transparent">
                 View Demo
               </Button>

@@ -145,11 +145,11 @@ export const dummyJobs: Job[] = [
 ]
 
 export const dummyCompanyData: CompanyData = {
-  slug: "techcorp",
-  name: "TechCorp",
+  slug: "whitecarrot-demo",
+  name: "WhiteCarrot Careers",
   theme: {
-    logo: null,
-    banner: null,
+    logo: "/whitecarrot-careers-logo.png",
+    banner: "/company-retreat-tropical-beach.jpg",
     primaryColor: "#0ea5e9",
     secondaryColor: "#64748b",
     textColor: "#0f172a",
@@ -157,5 +157,4 @@ export const dummyCompanyData: CompanyData = {
   },
   sections: dummySections,
   jobs: dummyJobs,
-  isPublished: true,
 }

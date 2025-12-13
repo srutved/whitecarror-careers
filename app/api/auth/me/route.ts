@@ -3,17 +3,43 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 
 export async function GET() {
     const supabase = createSupabaseServer();
-    const { data } = await supabase.auth.getUser();
 
-    if (!data.user) {
-        return NextResponse.json({ user: null }, { status: 401 });
+    // 1. Get authenticated user
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user || !user.email_confirmed_at) {
+        return NextResponse.json(
+            { error: "Unauthorized" },
+            { status: 401 }
+        );
     }
 
-    const { data: profile } = await supabase
+    // 2. Fetch user profile + company in ONE query
+    const { data, error } = await supabase
         .from("users")
-        .select("*")
-        .eq("id", data.user.id)
+        .select(`
+      id,
+      email,
+      name,
+      role,
+      company_id,
+      companies (
+        id,
+        name,
+        slug
+      )
+    `)
+        .eq("id", user.id)
         .single();
 
-    return NextResponse.json({ user: profile });
+    if (error) {
+        return NextResponse.json(
+            { error: error.message },
+            { status: 500 }
+        );
+    }
+
+    return NextResponse.json({ user: data });
 }

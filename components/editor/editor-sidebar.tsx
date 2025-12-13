@@ -12,32 +12,21 @@ import { ImageUpload } from "@/components/ui/image-upload"
 import { SectionItem } from "./section-item"
 import { AddSectionDropdown } from "./add-section-dropdown"
 import { SectionEditorDialog } from "./section-editor-dialog"
-import type { CompanyTheme, PageSection } from "@/lib/types"
+import type { Company, PageSection } from "@/lib/types"
+import { Textarea } from "../ui/textarea"
 
 interface EditorSidebarProps {
-  theme: CompanyTheme
-  sections: PageSection[]
-  isPublished: boolean
-  onThemeChange: (theme: CompanyTheme) => void
-  onSectionsChange: (sections: PageSection[]) => void
-  onPublishToggle: (published: boolean) => void
+  companyDraft: Company | null
   onViewPublic: () => void
-  companySlug: string
+  setCompanyDraft: (company: Company) => void
 }
 
 export function EditorSidebar({
-  theme,
-  sections,
-  isPublished,
-  onThemeChange,
-  onSectionsChange,
-  onPublishToggle,
-  onViewPublic,
-  companySlug,
+  companyDraft, onViewPublic, setCompanyDraft
 }: EditorSidebarProps) {
+  const [isCompanyDetailsOpen, setIsCompanyDetailsOpen] = useState(true)
   const [isThemeOpen, setIsThemeOpen] = useState(true)
   const [isSectionsOpen, setIsSectionsOpen] = useState(true)
-  const [isPublishOpen, setIsPublishOpen] = useState(true)
   const [editingSection, setEditingSection] = useState<PageSection | null>(null)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
@@ -56,22 +45,26 @@ export function EditorSidebar({
                 ? "Our Values"
                 : "Custom Section",
       content: "",
-      order: sections.length + 1,
+      order: (companyDraft?.sections?.length || 0) + 1,
       visible: true,
     }
-    onSectionsChange([...sections, newSection])
+    // onSectionsChange([...sections, newSection])
   }
 
   const handleDeleteSection = (id: string) => {
-    onSectionsChange(sections.filter((s) => s.id !== id))
+    // onSectionsChange(sections.filter((s) => s.id !== id))
   }
 
   const handleToggleVisibility = (id: string) => {
-    onSectionsChange(sections.map((s) => (s.id === id ? { ...s, visible: !s.visible } : s)))
+    // onSectionsChange(sections.map((s) => (s.id === id ? { ...s, visible: !s.visible } : s)))
   }
 
   const handleSaveSection = (updatedSection: PageSection) => {
-    onSectionsChange(sections.map((s) => (s.id === updatedSection.id ? updatedSection : s)))
+    // onSectionsChange(sections.map((s) => (s.id === updatedSection.id ? updatedSection : s)))
+  }
+
+  const handleCompanyDraftChange = (field: keyof Company, value: any) => {
+    setCompanyDraft({ ...companyDraft!, [field]: value })
   }
 
   const sidebarContent = (
@@ -89,42 +82,102 @@ export function EditorSidebar({
         </Button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto py-4 space-y-4">
+        {/* Company Details */}
+        <Collapsible open={isCompanyDetailsOpen} onOpenChange={setIsCompanyDetailsOpen}>
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" className="w-full justify-between p-0 h-auto hover:bg-transparent">
+              <span className="font-bold text-sm text-foreground">Company Details</span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${isThemeOpen ? "rotate-180" : ""}`} />
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-4 px-4 pt-4">
+            <div className="space-y-2">
+              <Label htmlFor="company-name" className="text-sm font-medium text-foreground">
+                Company Name
+              </Label>
+              <Input
+                id="company-name"
+                value={companyDraft?.name || ""}
+                onChange={(e) => handleCompanyDraftChange("name", e.target.value)}
+                placeholder="Your company name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="company-slug" className="text-sm font-medium text-foreground">
+                Company Slug
+              </Label>
+              <Input
+                id="company-slug"
+                value={companyDraft?.slug || ""}
+                onChange={(e) => handleCompanyDraftChange("slug", e.target.value)}
+                placeholder="your-company"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="company-description" className="text-sm font-medium text-foreground">
+                Description
+              </Label>
+              <Textarea
+                rows={4}
+                id="company-description"
+                value={companyDraft?.description || ""}
+                onChange={(e) => handleCompanyDraftChange("description", e.target.value)}
+                placeholder="A brief description of your company"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="company-website" className="text-sm font-medium text-foreground">
+                Website URL
+              </Label>
+              <Input
+                id="company-website"
+                value={companyDraft?.website || ""}
+                onChange={(e) => handleCompanyDraftChange("website", e.target.value)}
+                placeholder="https://www.yourcompany.com"
+              />
+            </div>
+            <ImageUpload
+              label="Company Logo (1:1)"
+              value={companyDraft?.logo_url || ""}
+              onChange={(logo) => handleCompanyDraftChange("logo_url", logo)}
+              aspectRatio="logo"
+            />
+            <ImageUpload
+              label="Banner Image (16:9)"
+              value={companyDraft?.banner_url || ""}
+              onChange={(banner) => handleCompanyDraftChange("banner_url", banner)}
+              aspectRatio="banner"
+            />
+            <Button className="w-full">Save Company Details</Button>
+          </CollapsibleContent>
+        </Collapsible>
+
+        <div className="border-t border-border" />
+
         {/* Theme Section */}
         <Collapsible open={isThemeOpen} onOpenChange={setIsThemeOpen}>
           <CollapsibleTrigger asChild>
             <Button variant="ghost" className="w-full justify-between p-0 h-auto hover:bg-transparent">
-              <span className="font-medium text-sm text-foreground">Company Theme</span>
+              <span className="font-bold text-sm text-foreground">Company Theme</span>
               <ChevronDown className={`h-4 w-4 transition-transform ${isThemeOpen ? "rotate-180" : ""}`} />
             </Button>
           </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-4 pt-4">
-            <ImageUpload
-              label="Company Logo (1:1)"
-              value={theme.logo}
-              onChange={(logo) => onThemeChange({ ...theme, logo })}
-              aspectRatio="logo"
-            />
-            <ImageUpload
-              label="Banner Image 16:9"
-              value={theme.banner}
-              onChange={(banner) => onThemeChange({ ...theme, banner })}
-              aspectRatio="banner"
-            />
+          <CollapsibleContent className="space-y-4 px-4 pt-4">
             <ColorPicker
               label="Primary Color"
-              value={theme.primaryColor}
-              onChange={(primaryColor) => onThemeChange({ ...theme, primaryColor })}
+              value={companyDraft?.primary_color || ""}
+              onChange={(primaryColor) => handleCompanyDraftChange("primary_color", primaryColor)}
             />
             <ColorPicker
               label="Secondary Color"
-              value={theme.secondaryColor}
-              onChange={(secondaryColor) => onThemeChange({ ...theme, secondaryColor })}
+              value={companyDraft?.secondary_color || ""}
+              onChange={(secondaryColor) => handleCompanyDraftChange("secondary_color", secondaryColor)}
             />
             <ColorPicker
               label="Text Color"
-              value={theme.textColor}
-              onChange={(textColor) => onThemeChange({ ...theme, textColor })}
+              value={companyDraft?.text_color || ""}
+              onChange={(textColor) => handleCompanyDraftChange("text_color", textColor)}
             />
             <div className="space-y-2">
               <Label htmlFor="video-url" className="text-sm font-medium text-foreground">
@@ -132,8 +185,8 @@ export function EditorSidebar({
               </Label>
               <Input
                 id="video-url"
-                value={theme.cultureVideoUrl}
-                onChange={(e) => onThemeChange({ ...theme, cultureVideoUrl: e.target.value })}
+                value={companyDraft?.culture_video_url || ""}
+                onChange={(e) => handleCompanyDraftChange("culture_video_url", e.target.value)}
                 placeholder="https://youtube.com/embed/..."
               />
             </div>
@@ -147,12 +200,12 @@ export function EditorSidebar({
         <Collapsible open={isSectionsOpen} onOpenChange={setIsSectionsOpen}>
           <CollapsibleTrigger asChild>
             <Button variant="ghost" className="w-full justify-between p-0 h-auto hover:bg-transparent">
-              <span className="font-medium text-sm text-foreground">Page Sections</span>
+              <span className="font-bold text-sm text-foreground">Page Sections</span>
               <ChevronDown className={`h-4 w-4 transition-transform ${isSectionsOpen ? "rotate-180" : ""}`} />
             </Button>
           </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-3 pt-4">
-            {sections
+          <CollapsibleContent className="space-y-3 pt-4 px-4">
+            {(companyDraft?.sections || [])
               .sort((a, b) => a.order - b.order)
               .map((section) => (
                 <SectionItem
@@ -168,38 +221,14 @@ export function EditorSidebar({
         </Collapsible>
 
         <div className="border-t border-border" />
-
-        {/* Publish */}
-        <Collapsible open={isPublishOpen} onOpenChange={setIsPublishOpen}>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" className="w-full justify-between p-0 h-auto hover:bg-transparent">
-              <span className="font-medium text-sm text-foreground">Publish Settings</span>
-              <ChevronDown className={`h-4 w-4 transition-transform ${isPublishOpen ? "rotate-180" : ""}`} />
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-4 pt-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="publish-toggle" className="text-sm font-medium text-foreground">
-                  Published
-                </Label>
-                <p className="text-xs text-muted-foreground">{isPublished ? "Page is live" : "Page is hidden"}</p>
-              </div>
-              <Switch id="publish-toggle" checked={isPublished} onCheckedChange={onPublishToggle} />
-            </div>
-            <Button variant="outline" className="w-full bg-transparent" onClick={onViewPublic}>
-              View Public Page
-            </Button>
-          </CollapsibleContent>
-        </Collapsible>
       </div>
 
-      <SectionEditorDialog
+      {/* <SectionEditorDialog
         section={editingSection}
         isOpen={!!editingSection}
         onClose={() => setEditingSection(null)}
         onSave={handleSaveSection}
-      />
+      /> */}
     </div>
   )
 

@@ -1,21 +1,20 @@
 "use client"
 
-import type { CompanyTheme } from "@/lib/types"
-import { Building2 } from "lucide-react"
+import { Company } from "@/lib/types";
+import { Building2 } from "lucide-react";
 
 interface CareersHeaderProps {
-  companyName: string
-  theme: CompanyTheme
+  company: Company
 }
 
-export function CareersHeader({ companyName, theme }: CareersHeaderProps) {
+export function CareersHeader({ company }: CareersHeaderProps) {
   return (
     <header className="relative">
       {/* Banner & Header */}
       <div
         className="h-48 md:h-64 lg:h-80 w-full bg-linear-to-r from-primary/20 to-accent/20"
         style={{
-          backgroundImage: theme?.banner ? `url(${theme?.banner})` : undefined,
+          backgroundImage: company?.banner_url ? `url(${company?.banner_url})` : undefined,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -26,16 +25,16 @@ export function CareersHeader({ companyName, theme }: CareersHeaderProps) {
               <div
                 className="w-12 h-12 sm:w-24 sm:h-24 rounded-xl border-4 border-background bg-card flex items-center justify-center shadow-lg"
                 style={{
-                  backgroundImage: theme?.logo ? `url(${theme?.logo})` : undefined,
+                  backgroundImage: company?.logo_url ? `url(${company?.logo_url})` : undefined,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
               >
-                {!theme?.logo && <Building2 className="h-10 w-10 text-muted-foreground" />}
+                {!company?.logo_url && <Building2 className="h-10 w-10 text-muted-foreground" />}
               </div>
               <div>
-                <h1 className="text-2xl sm:text-4xl lg:text-6xl font-bold" style={{ color: theme?.textColor }}>
-                  {companyName}
+                <h1 className="text-2xl sm:text-4xl lg:text-6xl font-bold" style={{ color: company?.text_color || "black" }}>
+                  {company?.name || "Company Name"}
                 </h1>
               </div>
             </div>

@@ -2,16 +2,16 @@
 
 import { MapPin, Building, ChevronRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import type { Job, CompanyTheme } from "@/lib/types"
+import type { Job } from "@/lib/types"
 
 interface JobCardProps {
   job: Job
-  theme: CompanyTheme
   onClick: () => void
   disabled?: boolean
+  textColor?: string
 }
 
-export function JobCard({ job, theme, onClick, disabled }: JobCardProps) {
+export function JobCard({ job, onClick, disabled, textColor }: JobCardProps) {
   const typeStyles: Record<Job["type"], string> = {
     "full-time": "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
     "part-time": "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
@@ -36,7 +36,7 @@ export function JobCard({ job, theme, onClick, disabled }: JobCardProps) {
         <div className="space-y-2">
           <h3
             className="text-lg font-semibold group-hover:text-primary transition-colors"
-            style={{ color: disabled ? undefined : theme.textColor }}
+            style={{ color: disabled ? undefined : textColor }}
           >
             {job.title}
           </h3>

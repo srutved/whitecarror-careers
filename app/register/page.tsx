@@ -12,17 +12,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Image from "next/image"
 import Link from "next/link"
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [name, setName] = useState("")
-  const [company, setCompany] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,15 +35,28 @@ export default function LoginPage() {
       return
     }
 
-    // Simulate login
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, name }),
+      });
 
-    if (email && password) {
-      router.push("/techcorp/edit")
-    } else {
-      setError("Please enter your email and password")
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Registration failed");
+        return;
+      }
+
+      setSuccess(data?.message || "Registration successful! Redirecting to login...");
+      setTimeout(() => router.push("/login"), 4000);
+    } catch (error) {
+      setError("Registration failed");
+    } finally {
+
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }
 
   return (
@@ -74,23 +87,6 @@ export default function LoginPage() {
                   className="pl-10"
                   required
                   aria-describedby="user-name"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Company Name</Label>
-              <div className="relative">
-                <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="company"
-                  type="text"
-                  placeholder="Tech Corp"
-                  value={company}
-                  onChange={(e) => setCompany(e.target.value)}
-                  className="pl-10"
-                  required
-                  aria-describedby="company-description"
                 />
               </div>
             </div>
@@ -172,6 +168,7 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {success && <div className="p-3 rounded-lg bg-green-200/10 text-green-700 text-sm">{success}</div>}
             {error && <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">{error}</div>}
 
             <Button type="submit" className="w-full" disabled={isLoading}>

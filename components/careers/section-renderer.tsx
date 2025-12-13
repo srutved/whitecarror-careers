@@ -1,13 +1,16 @@
 "use client"
 
-import type { PageSection, CompanyTheme } from "@/lib/types"
+import type { PageSection } from "@/lib/types"
 
 interface SectionRendererProps {
   sections: PageSection[]
-  theme: CompanyTheme
+  text_color: string | null;
+  primary_color: string | null;
+  culture_video_url: string | null;
+  secondary_color: string | null;
 }
 
-export function SectionRenderer({ sections, theme }: SectionRendererProps) {
+export function SectionRenderer({ sections, culture_video_url, primary_color, secondary_color, text_color }: SectionRendererProps) {
   const visibleSections = sections.filter((s) => s.visible).sort((a, b) => a.order - b.order)
 
   const renderSection = (section: PageSection) => {
@@ -16,7 +19,7 @@ export function SectionRenderer({ sections, theme }: SectionRendererProps) {
       case "mission":
         return (
           <div key={section.id} className="py-12 md:py-16">
-            <h2 className="text-2xl text-center md:text-3xl font-bold mb-6" style={{ color: theme.textColor }}>
+            <h2 className="text-2xl text-center md:text-3xl font-bold mb-6" style={{ color: text_color || "black" }}>
               {section.title}
             </h2>
             <p className="text-muted-foreground text-lg leading-relaxed text-justify">{section.content}</p>
@@ -26,7 +29,7 @@ export function SectionRenderer({ sections, theme }: SectionRendererProps) {
       case "life":
         return (
           <div key={section.id} className="py-12 md:py-16">
-            <h2 className="text-2xl text-center md:text-3xl font-bold mb-6" style={{ color: theme.textColor }}>
+            <h2 className="text-2xl text-center md:text-3xl font-bold mb-6" style={{ color: text_color || "black" }}>
               {section.title}
             </h2>
             <p className="text-muted-foreground text-lg leading-relaxed mb-8 text-justify">{section.content}</p>
@@ -43,11 +46,11 @@ export function SectionRenderer({ sections, theme }: SectionRendererProps) {
                 ))}
               </div>
             )}
-            {theme.cultureVideoUrl && (
+            {culture_video_url && (
               <div className="mt-8">
                 <div className="aspect-video rounded-xl overflow-hidden bg-muted">
                   <iframe
-                    src={theme.cultureVideoUrl}
+                    src={culture_video_url}
                     className="w-full h-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
@@ -69,7 +72,7 @@ export function SectionRenderer({ sections, theme }: SectionRendererProps) {
           })
         return (
           <div key={section.id} className="py-12 md:py-16">
-            <h2 className="text-2xl text-center md:text-3xl font-bold mb-8" style={{ color: theme.textColor }}>
+            <h2 className="text-2xl text-center md:text-3xl font-bold mb-8" style={{ color: text_color || "black" }}>
               {section.title}
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -80,11 +83,11 @@ export function SectionRenderer({ sections, theme }: SectionRendererProps) {
                 >
                   <div
                     className="w-10 h-10 rounded-lg mb-4 flex items-center justify-center text-primary-foreground font-bold"
-                    style={{ backgroundColor: theme.primaryColor }}
+                    style={{ backgroundColor: primary_color || "#000000" }}
                   >
                     {idx + 1}
                   </div>
-                  <h3 className="text-lg font-semibold mb-2" style={{ color: theme.textColor }}>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: text_color || "black" }}>
                     {value.title}
                   </h3>
                   <p className="text-muted-foreground text-sm">{value.description}</p>
@@ -97,7 +100,7 @@ export function SectionRenderer({ sections, theme }: SectionRendererProps) {
       case "custom":
         return (
           <div key={section.id} className="py-12 md:py-16">
-            <h2 className="text-2xl text-center md:text-3xl font-bold mb-6" style={{ color: theme.textColor }}>
+            <h2 className="text-2xl text-center md:text-3xl font-bold mb-6" style={{ color: text_color || "black" }}>
               {section.title}
             </h2>
             <div

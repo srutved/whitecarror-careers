@@ -8,17 +8,18 @@ export async function POST(req: Request) {
     const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+            emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/verify-account`,
+            data: { name }, // temporarily store name
+        },
     });
 
     if (error) {
         return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    await supabase.from("users").insert({
-        id: data.user?.id,
-        email,
-        name,
+    return NextResponse.json({
+        success: true,
+        message: "Sign up successful! Check your email to verify your account",
     });
-
-    return NextResponse.json({ success: true });
 }
