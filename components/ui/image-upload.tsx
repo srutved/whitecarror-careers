@@ -85,6 +85,7 @@ export function ImageUpload({
             <Button
               variant="destructive"
               size="icon"
+              type="button"
               className="absolute top-2 right-2 h-8 w-8"
               onClick={() => onChange(null)}
               aria-label={`Remove ${label}`}
@@ -99,6 +100,7 @@ export function ImageUpload({
             <Button
               variant="outline"
               size="sm"
+              type="button"
               onClick={() => fileInputRef.current?.click()}
             >
               <Upload className="h-4 w-4 mr-2" />
