@@ -124,13 +124,11 @@ export function EditorSidebar({
       }).then((data) => {
         setCompanyDraft({ ...companyDraft, id: data?.company?.id, is_published: true } as Company);
         setCompany({ ...companyDraft, id: data?.company?.id, is_published: true } as Company);
+      }).finally(() => {
+        setIsSaving(false);
       });
     } catch (error) {
       setError("Failed to save page. Please try again.")
-    } finally {
-      setTimeout(() => {
-        setIsSaving(false);
-      }, 1000);
     }
   }
 
