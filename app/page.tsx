@@ -41,7 +41,7 @@ export default function HomePage() {
             <span className="font-bold text-lg">Whitecarrot Careers</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/techcorp/careers">
+            <Link href="/whitecarrot-demo/careers">
               <Button variant="ghost">Demo</Button>
             </Link>
             <Link href="/login">
