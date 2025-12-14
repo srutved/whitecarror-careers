@@ -1,0 +1,7 @@
+Sample Credentials
+Email: anshuljain@yopmail.com
+password: 123456
+
+
+Sample Careers Page
+https://whitecarrot-careers.vercel.app/upwork-inc/careers
