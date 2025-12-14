@@ -77,11 +77,6 @@ export async function GET(
                 updated_at: data.updated_at
             },
             jobs: data.jobs
-        },
-        {
-            headers: {
-                "Cache-Control": "public, max-age=300"
-            }
         }
     );
 }
